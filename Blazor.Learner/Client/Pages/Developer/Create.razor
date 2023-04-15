@@ -1,0 +1,18 @@
+﻿@page "/developer/create"
+@using Blazor.Learner.Shared.Models
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+
+<h3>Create</h3>
+
+<Form ButtonText="Add" Dev="@developer" OnValidSubmit="@CreateDeveloper"></Form>
+
+@code {
+    protected Developer developer = new();
+
+    protected async Task CreateDeveloper()
+    {
+        await httpClient.PostAsJsonAsync("api/developer", developer);
+        navigationManager.NavigateTo("developers");
+    }
+}

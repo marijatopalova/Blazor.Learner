@@ -1,0 +1,28 @@
+﻿@page "/developer/edit/{developerId:int}"
+@using Blazor.Learner.Shared.Models
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+@inject IJSRuntime js
+
+<h3>Edit</h3>
+
+<Form ButtonText="Save" Dev="@developer" OnValidSubmit="@EditDeveloper"></Form>
+
+@code {
+    [Parameter]
+    public int developerId { get; set; }
+
+    protected Developer developer = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        developer = await httpClient.GetFromJsonAsync<Developer>($"api/developer/{developerId}");
+    }
+
+    protected async Task EditDeveloper()
+    {
+        await httpClient.PutAsJsonAsync("api/developer", developer);
+        await js.InvokeVoidAsync("alert", "Updated Successfully!");
+        navigationManager.NavigateTo("developers");
+    }
+}

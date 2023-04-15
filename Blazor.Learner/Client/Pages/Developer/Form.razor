@@ -1,0 +1,49 @@
+﻿@using Blazor.Learner.Shared.Models
+
+<EditForm Model="@Dev" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Fist Name: </label>
+        <div>
+            <InputText @bind-Value="@Dev.FirstName" />
+            <ValidationMessage For="@(() => Dev.FirstName)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Last Name: </label>
+        <div>
+            <InputText @bind-Value="@Dev.LastName" />
+            <ValidationMessage For="@(() => Dev.LastName)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Email: </label>
+        <div>
+            <InputText @bind-Value="@Dev.Email" />
+            <ValidationMessage For="@(() => Dev.Email)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Experience: </label>
+        <div>
+            <InputNumber @bind-Value="@Dev.Experience" />
+            <ValidationMessage For="@(() => Dev.Experience)" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        @ButtonText
+    </button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Developer Dev { get; set; }
+
+    [Parameter]
+    public string ButtonText { get; set; } = "Save";
+
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
+}

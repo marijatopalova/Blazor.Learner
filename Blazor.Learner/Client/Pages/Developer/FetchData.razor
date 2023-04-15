@@ -1,0 +1,70 @@
+﻿@page "/developers"
+@using Blazor.Learner.Shared.Models
+@inject HttpClient httpClient
+@inject IJSRuntime js
+
+<h3>Developers</h3>
+<small>Add as many developers as you wish.</small>
+
+<div class="form-group">
+    <a class="btn btn-success" href="developer/create"><i class="oi oi-plus"></i> Create New</a>
+</div>
+<br />
+
+@if (developers == null)
+{
+    <text>Loading...</text>
+}
+else if (developers.Length == 0)
+{
+    <text>No Records Found.</text>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Fist Name</th>
+                <th>Last Naem</th>
+                <th>Email</th>
+                <th>Experience (Years)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var developer in developers)
+            {
+                <tr>
+                    <td>@developer.Id</td>
+                    <td>@developer.FirstName</td>
+                    <td>@developer.LastName</td>
+                    <td>@developer.Email</td>
+                    <td>@developer.Experience</td>
+                    <td>
+                        <a class="btn btn-info" href="/developer/edit/@developer.Id">Edit</a> |
+                        <button class="btn btn-danger" @onclick="@(() => Delete(@developer.Id))">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    Developer[] developers { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        developers = await httpClient.GetFromJsonAsync<Developer[]>("api/Developer");
+    }
+
+    protected async Task Delete(int developerId)
+    {
+        if (await js.InvokeAsync<bool>("confirm", "Are you sure you want to delete this developer?"))
+        {
+            await httpClient.DeleteAsync($"api/Developer/{developerId}");
+            await OnInitializedAsync();
+        }
+    }
+}
